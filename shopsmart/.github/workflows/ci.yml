@@ -1,0 +1,68 @@
+name: ShopSmart CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  api-build:
+    name: Build TypeScript API
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./shopsmart/api
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: './shopsmart/api/package-lock.json'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build TypeScript
+      run: npm run build
+    
+    - name: Run tests
+      run: npm test
+
+  ml-service-lint:
+    name: Lint Python ML Service
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./shopsmart/ml-service
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+    
+    - name: Install Poetry
+      run: |
+        curl -sSL https://install.python-poetry.org | python3 -
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+    
+    - name: Install dependencies
+      run: |
+        poetry config virtualenvs.create false
+        poetry install
+    
+    - name: Run Black formatter check
+      run: poetry run black --check src tests
+    
+    - name: Run Ruff linter
+      run: poetry run ruff check src tests
+    
+    - name: Run tests
+      run: poetry run pytest
