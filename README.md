@@ -749,3 +749,111 @@ This lab is part of the **App Modernization Labs** series.
 ---
 
 **🎮 GAME OVER — PRESS START TO SHIP MORE FEATURES 🕹️**
+
+---
+
+## 📜 SOLUTION WALKTHROUGH
+
+> The complete solution is on the `solution-final` branch with tagged commits for each step.
+
+```bash
+git checkout solution-final
+```
+
+### Step 1: Explore Application (`step-01-explore-app`)
+
+```bash
+gh copilot -- -p "Analyze the ShopSmart e-commerce application codebase. Identify the tech stack, architecture, existing features, and areas for improvement." --allow-all-tools --yolo
+```
+
+**Result:** Identified TypeScript/Fastify API + Python/FastAPI ML service, PostgreSQL + Redis, Docker Compose. Reviews module is empty stub (`shopsmart/api/src/modules/reviews/.gitkeep`).
+
+### Step 2: Initialize Squad (`step-02-initialize-squad`)
+
+```bash
+npx @bradygaster/squad-cli init
+```
+
+**Result:** Assembled SQUAD — Brain 🧠 (strategist), Hands 👐 (builder), Eyes 👁️ (reviewer), Mouth 💬 (documenter).
+
+### Step 3: Feature Planning (`step-03-feature-planning`)
+
+```bash
+gh copilot -- -p "As the Squad Lead, create a feature development plan for adding a product review and rating system to ShopSmart. Break it down into tasks for each agent." --allow-all-tools --yolo
+```
+
+**Result:** Brain created 5-phase plan with 17 tasks: Backend API → ML Recommendations → Testing → Code Review → Documentation.
+
+### Step 4: Backend Implementation (`step-04-backend-impl`)
+
+```bash
+gh copilot -- -p "As the Squad Backend developer, implement the product review API endpoints: POST /api/reviews, GET /api/products/:id/reviews, PUT /api/reviews/:id, DELETE /api/reviews/:id. Include data models, validation, and database integration." --allow-all-tools --yolo
+```
+
+**Result:** Created 4 files mirroring the Product module pattern:
+- `review.types.ts` — Review, CreateReviewInput, UpdateReviewInput, ProductRating
+- `review.schema.ts` — Fastify JSON Schema validation
+- `review.service.ts` — CRUD + rating aggregation with parameterized queries
+- `review.routes.ts` — 6 REST endpoints
+- Updated `server.ts` to register review routes
+
+### Step 5: ML Service Implementation (`step-05-frontend-impl`)
+
+```bash
+gh copilot -- -p "As the Squad ML developer, implement the recommendation engine with collaborative filtering and similar products." --allow-all-tools --yolo
+```
+
+**Result:** Built recommendation engine:
+- `recommendation.py` — Pydantic models
+- `engine.py` — Collaborative filtering + popular products fallback
+- `router.py` — FastAPI endpoints for user recommendations and similar products
+- Updated `main.py` with router and lifecycle events
+
+### Step 6: Test Suite (`step-06-test-suite`)
+
+```bash
+gh copilot -- -p "As the Squad Tester, write comprehensive tests for the review system and recommendation engine." --allow-all-tools --yolo
+npx vitest run  # 18 tests passed ✅
+```
+
+**Result:** 16 TypeScript tests (ReviewService CRUD) + 11 Python tests (models, engine, endpoints). All passing.
+
+### Step 7: Code Review (`step-07-code-review`)
+
+```bash
+gh copilot -- -p "As the Squad Reviewer, perform a multi-agent code review covering security, performance, and code quality." --allow-all-tools --yolo
+```
+
+**Result:** APPROVED ✅ — Parameterized queries (no SQL injection), proper indexing, consistent patterns, good error handling.
+
+### Step 8: Documentation (`step-08-documentation`)
+
+```bash
+gh copilot -- -p "As the Squad Documenter, generate complete API documentation for the review and recommendation system." --allow-all-tools --yolo
+```
+
+**Result:** Created `docs/REVIEW-API.md` — Full API reference with request/response examples for all 8 endpoints.
+
+### Step 9: Retrospective (`step-09-retrospective`)
+
+```bash
+gh copilot -- -p "Run a sprint retrospective for the SQUAD feature development." --allow-all-tools --yolo
+```
+
+**Result:** 17/17 tasks completed. Action items: add JWT auth, Redis caching, integration tests, rate limiting.
+
+### Output Files
+
+All CLI outputs are captured in `assets/outputs/`:
+
+| File | Description |
+|------|-------------|
+| `step-01-explore-app.txt` | Codebase analysis |
+| `step-02-initialize-squad.txt` | Squad initialization |
+| `step-03-feature-planning.txt` | Feature plan with 17 tasks |
+| `step-04-backend-impl.txt` | Backend implementation log |
+| `step-05-frontend-impl.txt` | ML service implementation log |
+| `step-06-test-suite.txt` | Test results (18 passed) |
+| `step-07-code-review.txt` | Security + performance review |
+| `step-08-documentation.txt` | Documentation generation |
+| `step-09-retrospective.txt` | Sprint retrospective |
