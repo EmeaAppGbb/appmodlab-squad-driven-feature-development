@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>schema.sql — Database Schema</title>
+<style>
+  body { margin:0; background:#1e1e2e; color:#cdd6f4; font-family:'Cascadia Code','Fira Code',monospace; font-size:13px; padding:32px; }
+  .window { background:#181825; border-radius:12px; overflow:hidden; max-width:800px; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+  .titlebar { background:#11111b; padding:10px 16px; display:flex; align-items:center; gap:8px; }
+  .dot { width:12px; height:12px; border-radius:50%; }
+  .dot.r { background:#f38ba8; } .dot.y { background:#f9e2af; } .dot.g { background:#a6e3a1; }
+  .title { color:#6c7086; margin-left:12px; font-size:13px; }
+  .badge { background:#fab38722; color:#fab387; padding:2px 8px; border-radius:4px; margin-left:auto; font-size:11px; }
+  pre { margin:0; padding:20px 24px; line-height:1.6; overflow-x:auto; }
+  .kw { color:#cba6f7; font-weight:bold; }
+  .tp { color:#89b4fa; }
+  .str { color:#a6e3a1; }
+  .cm { color:#6c7086; }
+  .tbl { color:#f9e2af; font-weight:bold; }
+  .num { color:#fab387; }
+  .ln { color:#45475a; user-select:none; display:inline-block; width:28px; text-align:right; margin-right:16px; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <span class="title">database / schema.sql</span>
+    <span class="badge">SQL</span>
+  </div>
+<pre><span class="ln"> 1</span><span class="cm">-- ShopSmart Database Schema</span>
+<span class="ln"> 2</span>
+<span class="ln"> 3</span><span class="kw">CREATE TABLE</span> <span class="tbl">users</span> (
+<span class="ln"> 4</span>    id          <span class="tp">SERIAL PRIMARY KEY</span>,
+<span class="ln"> 5</span>    email       <span class="tp">VARCHAR(255)</span> <span class="kw">UNIQUE NOT NULL</span>,
+<span class="ln"> 6</span>    password_hash <span class="tp">VARCHAR(255)</span> <span class="kw">NOT NULL</span>,
+<span class="ln"> 7</span>    first_name  <span class="tp">VARCHAR(100)</span> <span class="kw">NOT NULL</span>,
+<span class="ln"> 8</span>    last_name   <span class="tp">VARCHAR(100)</span> <span class="kw">NOT NULL</span>,
+<span class="ln"> 9</span>    created_at  <span class="tp">TIMESTAMP</span> <span class="kw">DEFAULT</span> CURRENT_TIMESTAMP
+<span class="ln">10</span>);
+<span class="ln">11</span>
+<span class="ln">12</span><span class="kw">CREATE TABLE</span> <span class="tbl">products</span> (
+<span class="ln">13</span>    id          <span class="tp">SERIAL PRIMARY KEY</span>,
+<span class="ln">14</span>    name        <span class="tp">VARCHAR(255)</span> <span class="kw">NOT NULL</span>,
+<span class="ln">15</span>    description <span class="tp">TEXT</span> <span class="kw">NOT NULL</span>,
+<span class="ln">16</span>    price       <span class="tp">DECIMAL(10,2)</span> <span class="kw">NOT NULL CHECK</span> (price &gt;= <span class="num">0</span>),
+<span class="ln">17</span>    category    <span class="tp">VARCHAR(50)</span> <span class="kw">NOT NULL</span>,
+<span class="ln">18</span>    stock       <span class="tp">INTEGER</span> <span class="kw">NOT NULL DEFAULT</span> <span class="num">0</span>
+<span class="ln">19</span>);
+<span class="ln">20</span>
+<span class="ln">21</span><span class="kw">CREATE TABLE</span> <span class="tbl">orders</span> (
+<span class="ln">22</span>    id           <span class="tp">SERIAL PRIMARY KEY</span>,
+<span class="ln">23</span>    user_id      <span class="tp">INTEGER</span> <span class="kw">REFERENCES</span> users(id),
+<span class="ln">24</span>    total_amount <span class="tp">DECIMAL(10,2)</span> <span class="kw">NOT NULL</span>,
+<span class="ln">25</span>    status       <span class="tp">VARCHAR(20)</span> <span class="kw">DEFAULT</span> <span class="str">'pending'</span>
+<span class="ln">26</span>);
+<span class="ln">27</span>
+<span class="ln">28</span><span class="kw">CREATE TABLE</span> <span class="tbl">order_items</span> (
+<span class="ln">29</span>    id         <span class="tp">SERIAL PRIMARY KEY</span>,
+<span class="ln">30</span>    order_id   <span class="tp">INTEGER</span> <span class="kw">REFERENCES</span> orders(id),
+<span class="ln">31</span>    product_id <span class="tp">INTEGER</span> <span class="kw">REFERENCES</span> products(id),
+<span class="ln">32</span>    quantity   <span class="tp">INTEGER</span> <span class="kw">NOT NULL CHECK</span> (quantity &gt; <span class="num">0</span>),
+<span class="ln">33</span>    price      <span class="tp">DECIMAL(10,2)</span> <span class="kw">NOT NULL</span>
+<span class="ln">34</span>);
+<span class="ln">35</span>
+<span class="ln">36</span><span class="cm">-- ⚠️  Reviews table — schema exists, but API routes are empty</span>
+<span class="ln">37</span><span class="kw">CREATE TABLE</span> <span class="tbl">reviews</span> (
+<span class="ln">38</span>    id         <span class="tp">SERIAL PRIMARY KEY</span>,
+<span class="ln">39</span>    product_id <span class="tp">INTEGER</span> <span class="kw">REFERENCES</span> products(id),
+<span class="ln">40</span>    user_id    <span class="tp">INTEGER</span> <span class="kw">REFERENCES</span> users(id),
+<span class="ln">41</span>    rating     <span class="tp">INTEGER</span> <span class="kw">NOT NULL CHECK</span> (rating &gt;= <span class="num">1</span> <span class="kw">AND</span> rating &lt;= <span class="num">5</span>),
+<span class="ln">42</span>    comment    <span class="tp">TEXT</span>,
+<span class="ln">43</span>    created_at <span class="tp">TIMESTAMP</span> <span class="kw">DEFAULT</span> CURRENT_TIMESTAMP
+<span class="ln">44</span>);
+</pre>
+</div>
+</body>
+</html>

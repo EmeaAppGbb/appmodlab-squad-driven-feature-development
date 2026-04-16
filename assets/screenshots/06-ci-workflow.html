@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ci.yml — GitHub Actions Workflow</title>
+<style>
+  body { margin:0; background:#1e1e2e; color:#cdd6f4; font-family:'Cascadia Code','Fira Code',monospace; font-size:13px; padding:32px; }
+  .window { background:#181825; border-radius:12px; overflow:hidden; max-width:780px; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+  .titlebar { background:#11111b; padding:10px 16px; display:flex; align-items:center; gap:8px; }
+  .dot { width:12px; height:12px; border-radius:50%; }
+  .dot.r { background:#f38ba8; } .dot.y { background:#f9e2af; } .dot.g { background:#a6e3a1; }
+  .title { color:#6c7086; margin-left:12px; font-size:13px; }
+  .badge { background:#a6e3a122; color:#a6e3a1; padding:2px 8px; border-radius:4px; margin-left:auto; font-size:11px; }
+  pre { margin:0; padding:20px 24px; line-height:1.6; overflow-x:auto; }
+  .key { color:#89b4fa; }
+  .str { color:#a6e3a1; }
+  .cm { color:#6c7086; }
+  .job { color:#f9e2af; font-weight:bold; }
+  .ln { color:#45475a; user-select:none; display:inline-block; width:28px; text-align:right; margin-right:16px; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <span class="title">.github / workflows / ci.yml</span>
+    <span class="badge">YAML</span>
+  </div>
+<pre><span class="ln"> 1</span><span class="key">name:</span> <span class="str">ShopSmart CI</span>
+<span class="ln"> 2</span>
+<span class="ln"> 3</span><span class="key">on:</span>
+<span class="ln"> 4</span>  <span class="key">push:</span>    { <span class="key">branches:</span> [main, develop] }
+<span class="ln"> 5</span>  <span class="key">pull_request:</span> { <span class="key">branches:</span> [main, develop] }
+<span class="ln"> 6</span>
+<span class="ln"> 7</span><span class="key">jobs:</span>
+<span class="ln"> 8</span>
+<span class="ln"> 9</span>  <span class="job">api-build:</span>                        <span class="cm"># 🔷 TypeScript API</span>
+<span class="ln">10</span>    <span class="key">runs-on:</span> <span class="str">ubuntu-latest</span>
+<span class="ln">11</span>    <span class="key">working-directory:</span> <span class="str">./shopsmart/api</span>
+<span class="ln">12</span>    <span class="key">steps:</span>
+<span class="ln">13</span>      - <span class="key">uses:</span> <span class="str">actions/checkout@v4</span>
+<span class="ln">14</span>      - <span class="key">uses:</span> <span class="str">actions/setup-node@v4</span>
+<span class="ln">15</span>        <span class="key">with:</span> { <span class="key">node-version:</span> <span class="str">'20'</span> }
+<span class="ln">16</span>      - <span class="key">run:</span> <span class="str">npm ci</span>
+<span class="ln">17</span>      - <span class="key">run:</span> <span class="str">npm run build</span>
+<span class="ln">18</span>      - <span class="key">run:</span> <span class="str">npm test</span>
+<span class="ln">19</span>
+<span class="ln">20</span>  <span class="job">ml-service-lint:</span>                  <span class="cm"># 🐍 Python ML Service</span>
+<span class="ln">21</span>    <span class="key">runs-on:</span> <span class="str">ubuntu-latest</span>
+<span class="ln">22</span>    <span class="key">working-directory:</span> <span class="str">./shopsmart/ml-service</span>
+<span class="ln">23</span>    <span class="key">steps:</span>
+<span class="ln">24</span>      - <span class="key">uses:</span> <span class="str">actions/checkout@v4</span>
+<span class="ln">25</span>      - <span class="key">uses:</span> <span class="str">actions/setup-python@v5</span>
+<span class="ln">26</span>        <span class="key">with:</span> { <span class="key">python-version:</span> <span class="str">'3.11'</span> }
+<span class="ln">27</span>      - <span class="key">run:</span> <span class="str">poetry install</span>
+<span class="ln">28</span>      - <span class="key">run:</span> <span class="str">poetry run black --check src tests</span>
+<span class="ln">29</span>      - <span class="key">run:</span> <span class="str">poetry run ruff check src tests</span>
+<span class="ln">30</span>      - <span class="key">run:</span> <span class="str">poetry run pytest</span>
+</pre>
+</div>
+</body>
+</html>

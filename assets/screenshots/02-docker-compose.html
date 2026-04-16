@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>docker-compose.yml — Service Orchestration</title>
+<style>
+  body { margin:0; background:#1e1e2e; color:#cdd6f4; font-family:'Cascadia Code','Fira Code',monospace; font-size:13px; padding:32px; }
+  .window { background:#181825; border-radius:12px; overflow:hidden; max-width:780px; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+  .titlebar { background:#11111b; padding:10px 16px; display:flex; align-items:center; gap:8px; }
+  .dot { width:12px; height:12px; border-radius:50%; }
+  .dot.r { background:#f38ba8; } .dot.y { background:#f9e2af; } .dot.g { background:#a6e3a1; }
+  .title { color:#6c7086; margin-left:12px; font-size:13px; }
+  pre { margin:0; padding:20px 24px; line-height:1.55; overflow-x:auto; }
+  .key { color:#89b4fa; }
+  .str { color:#a6e3a1; }
+  .num { color:#fab387; }
+  .comment { color:#6c7086; }
+  .svc { color:#f9e2af; font-weight:bold; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <span class="title">docker-compose.yml — Service Orchestration</span>
+  </div>
+<pre>
+<span class="key">version:</span> <span class="str">'3.8'</span>
+
+<span class="key">services:</span>
+
+  <span class="svc">postgres:</span>                          <span class="comment"># 🗄️ PostgreSQL 16</span>
+    <span class="key">image:</span> <span class="str">postgres:16-alpine</span>
+    <span class="key">ports:</span> [<span class="str">"5432:5432"</span>]
+    <span class="key">environment:</span>
+      <span class="key">POSTGRES_DB:</span>       <span class="str">shopsmart</span>
+      <span class="key">POSTGRES_USER:</span>     <span class="str">postgres</span>
+      <span class="key">POSTGRES_PASSWORD:</span> <span class="str">postgres</span>
+    <span class="key">volumes:</span>
+      - <span class="str">./database/schema.sql</span> → <span class="str">01-schema.sql</span>
+      - <span class="str">./database/seed.sql</span>   → <span class="str">02-seed.sql</span>
+
+  <span class="svc">redis:</span>                             <span class="comment"># ⚡ Redis 7 (caching)</span>
+    <span class="key">image:</span> <span class="str">redis:7-alpine</span>
+    <span class="key">ports:</span> [<span class="str">"6379:6379"</span>]
+
+  <span class="svc">api:</span>                               <span class="comment"># 🔷 TypeScript API (Fastify)</span>
+    <span class="key">build:</span> <span class="str">./api</span>
+    <span class="key">ports:</span> [<span class="str">"3000:3000"</span>]
+    <span class="key">depends_on:</span> [postgres, redis]
+    <span class="key">environment:</span>
+      <span class="key">DB_HOST:</span>     <span class="str">postgres</span>
+      <span class="key">REDIS_HOST:</span>  <span class="str">redis</span>
+      <span class="key">JWT_SECRET:</span>  <span class="str">super-secret-key…</span>
+
+  <span class="svc">ml-service:</span>                        <span class="comment"># 🐍 Python ML Service (FastAPI)</span>
+    <span class="key">build:</span> <span class="str">./ml-service</span>
+    <span class="key">ports:</span> [<span class="str">"8000:8000"</span>]
+    <span class="key">depends_on:</span> [postgres]
+    <span class="key">environment:</span>
+      <span class="key">POSTGRES_HOST:</span> <span class="str">postgres</span>
+      <span class="key">POSTGRES_DB:</span>   <span class="str">shopsmart</span>
+</pre>
+</div>
+</body>
+</html>

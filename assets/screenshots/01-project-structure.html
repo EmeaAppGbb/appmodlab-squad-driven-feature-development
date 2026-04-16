@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ShopSmart — Project Structure</title>
+<style>
+  body { margin:0; background:#1e1e2e; color:#cdd6f4; font-family:'Cascadia Code','Fira Code',monospace; font-size:14px; padding:32px; }
+  .window { background:#181825; border-radius:12px; overflow:hidden; max-width:820px; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+  .titlebar { background:#11111b; padding:10px 16px; display:flex; align-items:center; gap:8px; }
+  .dot { width:12px; height:12px; border-radius:50%; }
+  .dot.r { background:#f38ba8; } .dot.y { background:#f9e2af; } .dot.g { background:#a6e3a1; }
+  .title { color:#6c7086; margin-left:12px; font-size:13px; }
+  pre { margin:0; padding:20px 24px; line-height:1.6; overflow-x:auto; }
+  .dir  { color:#89b4fa; font-weight:bold; }
+  .file { color:#cdd6f4; }
+  .tag  { color:#a6e3a1; font-style:italic; }
+  .warn { color:#f9e2af; font-style:italic; }
+  .comment { color:#6c7086; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <span class="title">ShopSmart — Project Structure</span>
+  </div>
+<pre>
+<span class="dir">shopsmart/</span>
+├── <span class="dir">api/</span>                        <span class="comment"># 🔷 TypeScript API (Fastify)</span>
+│   ├── <span class="dir">src/</span>
+│   │   ├── <span class="file">server.ts</span>           <span class="tag">✅ Entry point — registers routes &amp; plugins</span>
+│   │   ├── <span class="file">config.ts</span>           <span class="tag">✅ DB / Redis / JWT configuration</span>
+│   │   └── <span class="dir">modules/</span>
+│   │       ├── <span class="dir">products/</span>       <span class="tag">✅ CRUD — routes, service, schema, types</span>
+│   │       ├── <span class="dir">users/</span>          <span class="tag">✅ Auth &amp; user management</span>
+│   │       ├── <span class="dir">orders/</span>         <span class="tag">✅ Order processing</span>
+│   │       └── <span class="dir">reviews/</span>        <span class="warn">⚠️  EMPTY — to be built by SQUAD</span>
+│   ├── <span class="dir">tests/</span>
+│   ├── <span class="file">Dockerfile</span>
+│   ├── <span class="file">tsconfig.json</span>
+│   └── <span class="file">package.json</span>
+│
+├── <span class="dir">ml-service/</span>                  <span class="comment"># 🐍 Python ML Service (FastAPI)</span>
+│   ├── <span class="dir">src/</span>
+│   │   ├── <span class="file">main.py</span>             <span class="tag">✅ FastAPI app — health &amp; root endpoints</span>
+│   │   ├── <span class="file">config.py</span>           <span class="tag">✅ Pydantic settings for Postgres</span>
+│   │   ├── <span class="dir">models/</span>             <span class="warn">⚠️  EMPTY — sentiment + recommender stubs</span>
+│   │   └── <span class="dir">recommendations/</span>    <span class="warn">⚠️  EMPTY — collab filtering to build</span>
+│   ├── <span class="dir">tests/</span>
+│   ├── <span class="file">Dockerfile</span>
+│   └── <span class="file">pyproject.toml</span>
+│
+├── <span class="dir">database/</span>                    <span class="comment"># 🗄️ PostgreSQL</span>
+│   ├── <span class="file">schema.sql</span>              <span class="tag">✅ users, products, orders, reviews tables</span>
+│   └── <span class="file">seed.sql</span>                <span class="tag">✅ 20 users · 50 products · 100 orders</span>
+│
+├── <span class="dir">.github/workflows/</span>
+│   └── <span class="file">ci.yml</span>                  <span class="tag">✅ Build TS API + lint Python ML service</span>
+│
+└── <span class="file">docker-compose.yml</span>          <span class="tag">✅ postgres · redis · api · ml-service</span>
+</pre>
+</div>
+</body>
+</html>

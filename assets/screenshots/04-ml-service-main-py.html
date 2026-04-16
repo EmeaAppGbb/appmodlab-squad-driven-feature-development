@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>main.py — FastAPI ML Service</title>
+<style>
+  body { margin:0; background:#1e1e2e; color:#cdd6f4; font-family:'Cascadia Code','Fira Code',monospace; font-size:13px; padding:32px; }
+  .window { background:#181825; border-radius:12px; overflow:hidden; max-width:800px; box-shadow:0 8px 32px rgba(0,0,0,.5); }
+  .titlebar { background:#11111b; padding:10px 16px; display:flex; align-items:center; gap:8px; }
+  .dot { width:12px; height:12px; border-radius:50%; }
+  .dot.r { background:#f38ba8; } .dot.y { background:#f9e2af; } .dot.g { background:#a6e3a1; }
+  .title { color:#6c7086; margin-left:12px; font-size:13px; }
+  .badge { background:#f9e2af22; color:#f9e2af; padding:2px 8px; border-radius:4px; margin-left:auto; font-size:11px; }
+  pre { margin:0; padding:20px 24px; line-height:1.6; overflow-x:auto; }
+  .kw { color:#cba6f7; }
+  .fn { color:#89b4fa; }
+  .str { color:#a6e3a1; }
+  .cm { color:#6c7086; }
+  .dec { color:#fab387; }
+  .ln { color:#45475a; user-select:none; display:inline-block; width:28px; text-align:right; margin-right:16px; }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <span class="title">ml-service / src / main.py</span>
+    <span class="badge">Python</span>
+  </div>
+<pre><span class="ln"> 1</span><span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI
+<span class="ln"> 2</span><span class="kw">from</span> fastapi.middleware.cors <span class="kw">import</span> CORSMiddleware
+<span class="ln"> 3</span><span class="kw">from</span> .config <span class="kw">import</span> settings
+<span class="ln"> 4</span>
+<span class="ln"> 5</span>app = <span class="fn">FastAPI</span>(
+<span class="ln"> 6</span>    title=<span class="str">"ShopSmart ML Service"</span>,
+<span class="ln"> 7</span>    description=<span class="str">"Machine learning recommendation engine"</span>,
+<span class="ln"> 8</span>    version=<span class="str">"1.0.0"</span>,
+<span class="ln"> 9</span>)
+<span class="ln">10</span>
+<span class="ln">11</span>app.<span class="fn">add_middleware</span>(CORSMiddleware, allow_origins=[<span class="str">"*"</span>], ...)
+<span class="ln">12</span>
+<span class="ln">13</span><span class="dec">@app.get</span>(<span class="str">"/health"</span>)
+<span class="ln">14</span><span class="kw">async def</span> <span class="fn">health_check</span>():
+<span class="ln">15</span>    <span class="kw">return</span> {<span class="str">"status"</span>: <span class="str">"ok"</span>, <span class="str">"service"</span>: <span class="str">"ShopSmart ML Service"</span>}
+<span class="ln">16</span>
+<span class="ln">17</span><span class="dec">@app.get</span>(<span class="str">"/"</span>)
+<span class="ln">18</span><span class="kw">async def</span> <span class="fn">root</span>():
+<span class="ln">19</span>    <span class="kw">return</span> {
+<span class="ln">20</span>        <span class="str">"message"</span>: <span class="str">"ShopSmart ML Service"</span>,
+<span class="ln">21</span>        <span class="str">"endpoints"</span>: {
+<span class="ln">22</span>            <span class="str">"health"</span>: <span class="str">"/health"</span>,
+<span class="ln">23</span>            <span class="str">"recommendations"</span>: <span class="str">"/recommendations"</span>,
+<span class="ln">24</span>            <span class="cm"># ⚠️  to be implemented by SQUAD</span>
+<span class="ln">25</span>        },
+<span class="ln">26</span>    }
+</pre>
+</div>
+</body>
+</html>
