@@ -1,0 +1,55 @@
+=== STEP 01: Application Exploration ===
+Executed: gh copilot -- -p "Analyze the ShopSmart e-commerce application codebase..." --allow-all-tools --yolo
+Date: 2026-04-16 19:44:18
+
+== ShopSmart Codebase Analysis ==
+
+TECH STACK:
+- Backend API: TypeScript + Fastify (Node.js)
+- ML Service: Python + FastAPI
+- Database: PostgreSQL 16
+- Cache: Redis 7
+- Containerization: Docker Compose (4 services)
+- Testing: Vitest (TS), pytest (Python)
+- CI/CD: GitHub Actions
+
+ARCHITECTURE:
+- Polyglot microservice architecture
+- api/ - TypeScript Fastify server (port 3000)
+  - Modular structure: modules/{products,users,orders,reviews}
+  - Plugin system for database and Redis connections
+  - JWT authentication support
+  - JSON Schema validation
+- ml-service/ - Python FastAPI server (port 8000)
+  - Recommendation engine (stub)
+  - PostgreSQL direct connection
+- database/ - Schema and seed data
+  - 5 tables: users, products, orders, order_items, reviews
+  - 20 users, 50 products, 100 orders seeded
+
+EXISTING FEATURES (Working):
+1. Products CRUD - Full REST API with search, filtering, pagination
+2. Users module - User management with auth
+3. Orders module - Order management with status tracking
+4. Health endpoints on both services
+5. Docker Compose orchestration with health checks
+
+STUBS (Empty - To Be Built by SQUAD):
+1. Reviews module (api/src/modules/reviews/) - Only .gitkeep
+2. Recommendations engine (ml-service/src/recommendations/) - Only .gitkeep
+3. Reviews API not registered in server.ts
+
+PATTERNS TO FOLLOW:
+- Product module is the reference implementation
+- Each module has: routes.ts, service.ts, types.ts, schema.ts
+- Services use constructor injection with Pool (pg)
+- Routes use Fastify schema validation
+- Custom error classes in utils/errors.ts
+
+AREAS FOR IMPROVEMENT:
+1. Reviews module needs full CRUD implementation
+2. Recommendations engine needs ML logic
+3. Reviews route needs registration in server.ts
+4. No review seed data (0 reviews in database)
+5. Test files are placeholder-only
+6. No API documentation
