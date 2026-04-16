@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from .config import settings
+from .recommendations.router import router as recommendations_router
+from .recommendations.engine import engine
 
 app = FastAPI(
     title="ShopSmart ML Service",
@@ -16,6 +18,18 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(recommendations_router)
+
+
+@app.on_event("startup")
+async def startup_event():
+    await engine.initialize()
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    await engine.close()
+
 
 @app.get("/health")
 async def health_check():
@@ -29,10 +43,11 @@ async def health_check():
 @app.get("/")
 async def root():
     return {
-        "message": "ShopSmart ML Service - Recommendations endpoint will be built by SQUAD",
+        "message": "ShopSmart ML Service",
         "endpoints": {
             "health": "/health",
-            "recommendations": "/recommendations (to be implemented)",
+            "user_recommendations": "/recommendations/user/{user_id}",
+            "similar_products": "/recommendations/product/{product_id}/similar",
         },
     }
 

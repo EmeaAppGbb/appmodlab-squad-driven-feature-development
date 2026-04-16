@@ -1,0 +1,37 @@
+=== STEP 05: Frontend/ML Service Implementation ===
+Executed: gh copilot -- -p "As the Squad ML developer, implement the recommendations engine..." --allow-all-tools --yolo
+Date: 2026-04-16 19:49:44
+
+== Hands (ML Developer) Implementation ==
+
+FILES CREATED:
+1. shopsmart/ml-service/src/models/recommendation.py
+   - RecommendationItem: product_id, score (0-1), reason
+   - RecommendationResponse: user_id, recommendations list, strategy
+   - SimilarProductItem: product_id, similarity_score, shared_category
+   - SimilarProductsResponse: product_id, similar_products list
+
+2. shopsmart/ml-service/src/recommendations/__init__.py
+   - Package initializer
+
+3. shopsmart/ml-service/src/recommendations/engine.py
+   - RecommendationEngine class with asyncpg connection pool
+   - get_user_recommendations(): Two-strategy approach
+     - Strategy 1: Collaborative filtering (users with similar ratings)
+     - Strategy 2: Fallback to popular products
+   - get_similar_products(): Find similar via shared reviewers + category
+   - Singleton engine instance
+
+4. shopsmart/ml-service/src/recommendations/router.py
+   - GET /recommendations/user/{user_id} - personalized recommendations
+   - GET /recommendations/product/{product_id}/similar - similar products
+   - Query param: limit with validation
+
+FILES MODIFIED:
+5. shopsmart/ml-service/src/main.py
+   - Added recommendations router import and inclusion
+   - Added startup/shutdown lifecycle events for engine pool
+   - Updated root endpoint to show recommendation URLs
+
+FILES DELETED:
+6. shopsmart/ml-service/src/recommendations/.gitkeep
