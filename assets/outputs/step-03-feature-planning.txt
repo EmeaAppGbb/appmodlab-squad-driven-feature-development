@@ -1,0 +1,112 @@
+=== STEP 03: Feature Planning with Squad ===
+Executed: gh copilot -- -p "As the Squad Lead, create a feature development plan..." --allow-all-tools --yolo
+Date: 2026-04-16 19:45:19
+
+== BRAIN's Feature Development Plan ==
+
+FEATURE: Product Review & Rating System for ShopSmart
+EPIC: SHOP-100
+
+---
+
+PHASE 1: BACKEND IMPLEMENTATION (Hands - Backend Developer)
+Task SHOP-101: Create Review Types & Interfaces
+  - review.types.ts: Review, CreateReviewInput, UpdateReviewInput, ReviewQueryParams
+  - Mirror product.types.ts pattern
+
+Task SHOP-102: Create Review Schema Validation
+  - review.schema.ts: createReviewSchema, updateReviewSchema, getReviewsSchema
+  - Rating: 1-5 integer, comment: optional text
+  - Mirror product.schema.ts pattern
+
+Task SHOP-103: Implement Review Service
+  - review.service.ts: CRUD operations + aggregate queries
+  - getReviewsByProduct(productId, params) - paginated
+  - getReviewById(id)
+  - createReview(input) - with user/product validation
+  - updateReview(id, input) - owner only
+  - deleteReview(id) - owner only
+  - getProductRating(productId) - average + count
+
+Task SHOP-104: Create Review Routes
+  - review.routes.ts: REST endpoints
+  - POST /api/reviews - create review
+  - GET /api/products/:productId/reviews - list reviews for product
+  - GET /api/reviews/:id - get single review
+  - PUT /api/reviews/:id - update review
+  - DELETE /api/reviews/:id - delete review
+  - GET /api/products/:productId/rating - get aggregate rating
+
+Task SHOP-105: Register Routes in Server
+  - Update server.ts to import and register reviewRoutes
+
+---
+
+PHASE 2: ML SERVICE - RECOMMENDATIONS (Hands - ML Developer)
+Task SHOP-201: Create Recommendation Models
+  - models/recommendation.py: Pydantic models
+  - RecommendationRequest, RecommendationResponse
+
+Task SHOP-202: Implement Recommendation Engine
+  - recommendations/engine.py: Collaborative filtering logic
+  - Based on review ratings + purchase history
+  - Fallback to popular products when no data
+
+Task SHOP-203: Create Recommendation Routes
+  - GET /recommendations/{user_id} - personalized recommendations
+  - GET /recommendations/product/{product_id}/similar - similar products
+
+---
+
+PHASE 3: TESTING (Eyes - QA Engineer)
+Task SHOP-301: Review API Unit Tests
+  - tests/reviews.test.ts: Full CRUD test coverage
+  - Test validation, error cases, pagination
+
+Task SHOP-302: ML Service Tests
+  - tests/test_recommendations.py: Engine + endpoint tests
+
+Task SHOP-303: Integration Test Scenarios
+  - End-to-end review creation flow
+  - Rating aggregation verification
+
+---
+
+PHASE 4: CODE REVIEW (Eyes - Reviewer)
+Task SHOP-401: Security Review
+  - Input validation, SQL injection prevention
+  - Authorization checks on update/delete
+
+Task SHOP-402: Performance Review
+  - Database query optimization
+  - Index usage verification
+
+Task SHOP-403: Code Quality Review
+  - Pattern consistency with existing modules
+  - Error handling completeness
+
+---
+
+PHASE 5: DOCUMENTATION (Mouth - DevRel)
+Task SHOP-501: API Documentation
+  - Review endpoints documentation
+  - Request/response examples
+
+Task SHOP-502: README Update
+  - Add review feature to project README
+  - Update architecture diagram
+
+Task SHOP-503: Developer Guide
+  - How to use the review API
+  - Integration examples
+
+---
+
+DEPENDENCIES:
+SHOP-101 -> SHOP-102 -> SHOP-103 -> SHOP-104 -> SHOP-105
+SHOP-105 -> SHOP-201 -> SHOP-202 -> SHOP-203
+SHOP-105 -> SHOP-301 -> SHOP-302 -> SHOP-303
+All implementation -> SHOP-401, SHOP-402, SHOP-403
+All above -> SHOP-501, SHOP-502, SHOP-503
+
+ESTIMATED EFFORT: ~4 hours with SQUAD
