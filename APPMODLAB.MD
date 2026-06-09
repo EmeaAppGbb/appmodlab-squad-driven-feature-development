@@ -11,7 +11,7 @@ modernizationTools: []
 agenticTools: ["SQUAD"]
 tags: ["e-commerce", "recommendations", "multi-language", "feature-development", "review-system"]
 extensions: ["github.copilot"]
-thumbnail: ""
+thumbnail: "https://raw.githubusercontent.com/EmeaAppGbb/appmodlab-squad-driven-feature-development/main/assets/thumbnail-gpt-image.png"
 video: ""
 version: "1.0.0"
 ---
